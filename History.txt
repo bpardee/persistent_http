@@ -1,0 +1,4 @@
+=== 1.0.0 / 2010-09-16
+
+* Major Enhancements
+  * Based on drbrain/net-http-persistent but uses a connection pool instead of connection/thread

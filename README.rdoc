@@ -1,0 +1,58 @@
+= persistent_http
+
+* http://github.com/bpardee/persistent_http
+
+== DESCRIPTION:
+
+Persistent connections using Net::HTTP with a connection pool.
+
+This is based on Eric Holder's Net::HTTP::Persistent libary but uses
+a connection pool of Net::HTTP objects instead of a connection per 
+thread.  C/T is fine if you're only using your http threads to make 
+connections but if you use them in child threads then I suspect you 
+will have a thread memory leak.  Also, you will generally get less
+connection resets if the most recently used connection is always 
+returned.
+
+== FEATURES/PROBLEMS:
+
+* Supports SSL
+* Thread-safe
+* Pure ruby
+* Timeout-less speed boost for 1.8 (by Aaron Patterson)
+
+== INSTALL:
+
+  gem install persistent_http
+
+== EXAMPLE USAGE:
+
+  require 'persistent_http'
+
+  class MyHTTPClient
+    @@persistent_http = PersistentHTTP.new(
+      :name         => 'MyHTTPClient',
+      :logger       => Rails.logger,
+      :pool_size    => 10,
+      :warn_timeout => 0.25,
+      :force_retry  => true,
+      :url          => 'https://www.example.com/echo/foo'  # equivalent to :use_ssl => true, :host => 'www.example.com', :default_path => '/echo/foo'
+    )
+
+    def send_get_message
+      response = @@persistent_http.request
+      ... Handle response as you would a normal Net::HTTPResponse ...
+    end
+
+    def send_post_message
+      request = Net::HTTP::Post.new('/perform_service)
+      ... Modify request as needed ...
+      response = @@persistent_http.request(request)
+      ... Handle response as you would a normal Net::HTTPResponse ...
+    end
+  end
+
+
+== Copyright
+
+Copyright (c) 2010 Eric Hodel, Aaron Patterson, Brad Pardee.  See LICENSE for details.
