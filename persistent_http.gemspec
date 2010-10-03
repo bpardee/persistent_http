@@ -4,13 +4,13 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{gene_pool}
-  s.version = "1.0.1"
+  s.name = %q{persistent_http}
+  s.version = "1.0.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Brad Pardee"]
-  s.date = %q{2010-09-12}
-  s.description = %q{Generic pooling library for creating a connection pool}
+  s.date = %q{2010-10-03}
+  s.description = %q{Persistent HTTP connections using a connection pool}
   s.email = %q{bradpardee@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -23,17 +23,18 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION",
-     "gene_pool.gemspec",
-     "lib/gene_pool.rb",
-     "test/gene_pool_test.rb"
+     "lib/persistent_http.rb",
+     "lib/persistent_http/faster.rb",
+     "persistent_http.gemspec",
+     "test/persistent_http_test.rb"
   ]
-  s.homepage = %q{http://github.com/bpardee/gene_pool}
+  s.homepage = %q{http://github.com/bpardee/persistent_http}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.6}
-  s.summary = %q{Generic pooling library for creating a connection pool}
+  s.summary = %q{Persistent HTTP connections using a connection pool}
   s.test_files = [
-    "test/gene_pool_test.rb"
+    "test/persistent_http_test.rb"
   ]
 
   if s.respond_to? :specification_version then
