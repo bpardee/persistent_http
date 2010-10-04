@@ -10,6 +10,7 @@ begin
     gemspec.email = "bradpardee@gmail.com"
     gemspec.homepage = "http://github.com/bpardee/persistent_http"
     gemspec.authors = ["Brad Pardee"]
+    gemspec.add_dependency 'gene_pool', [">= 1.0.1"]
   end
 rescue LoadError
   puts "Jeweler not available. Install it with: gem install jeweler"
