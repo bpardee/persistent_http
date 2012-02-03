@@ -45,7 +45,7 @@ returned.
     end
 
     def send_post_message
-      request = Net::HTTP::Post.new('/perform_service)
+      request = Net::HTTP::Post.new('/perform_service')
       ... Modify request as needed ...
       response = @@persistent_http.request(request)
       ... Handle response as you would a normal Net::HTTPResponse ...
