@@ -258,7 +258,7 @@ class PersistentHTTP
   # If there is an error and the request is idempontent according to RFC 2616
   # it will be retried automatically.
 
-  def request req = nil, &block
+  def request(req = nil, options = {}, &block)
     retried      = false
     bad_response = false
 
@@ -273,12 +273,15 @@ class PersistentHTTP
 
     @pool.with_connection do |connection|
       begin
+        options.each do |key, value|
+          connection.send("#{key}=", value)
+        end
         response = connection.request req, &block
         @http_version ||= response.http_version
         @count_hash[connection.object_id] += 1
         return response
 
-      rescue  Timeout::Error => e
+      rescue Timeout::Error => e
         due_to = "(due to #{e.message} - #{e.class})"
         message = error_message connection
         @logger.info "#{name}: Removing connection #{due_to} #{message}" if @logger
@@ -298,7 +301,7 @@ class PersistentHTTP
           retry
         end
 
-      rescue IOError, EOFError, Errno::ECONNABORTED, Errno::ECONNRESET, Errno::EPIPE => e
+      rescue IOError, EOFError, Errno::ECONNABORTED, Errno::ECONNREFUSED, Errno::ECONNRESET, Errno::EPIPE => e
         due_to = "(due to #{e.message} - #{e.class})"
         message = error_message connection
         if retried or not (idempotent? req or @force_retry)

@@ -1,17 +1,35 @@
+# encoding: UTF-8
 require 'rubygems'
-require 'rake'
-
 begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |gemspec|
-    gemspec.name = "persistent_http"
-    gemspec.summary = "Persistent HTTP connections using a connection pool"
-    gemspec.description = "Persistent HTTP connections using a connection pool"
-    gemspec.email = "bradpardee@gmail.com"
-    gemspec.homepage = "http://github.com/bpardee/persistent_http"
-    gemspec.authors = ["Brad Pardee"]
-    gemspec.add_dependency 'gene_pool', [">= 1.0.1"]
-  end
+  require 'bundler/setup'
 rescue LoadError
-  puts "Jeweler not available. Install it with: gem install jeweler"
+  puts 'You must `gem install bundler` and `bundle install` to run rake tasks'
+end
+
+require 'rake'
+#require 'rake/dsl_definition'
+require 'rdoc/task'
+require 'rake/testtask'
+require 'rake/clean'
+
+desc "Build gem"
+task :gem  do |t|
+  system 'gem build persistent_http.gemspec'
+end
+
+Rake::TestTask.new(:test) do |t|
+  t.libs << 'lib'
+  t.libs << 'test'
+  t.pattern = 'test/**/*_test.rb'
+  t.verbose = false
+end
+
+task :default => :test
+
+RDoc::Task.new(:rdoc) do |rdoc|
+  rdoc.rdoc_dir = 'rdoc'
+  rdoc.title    = 'PersistentHttp'
+  rdoc.options << '--line-numbers' << '--inline-source'
+  rdoc.rdoc_files.include('README.rdoc')
+  rdoc.rdoc_files.include('lib/**/*.rb')
 end
