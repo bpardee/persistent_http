@@ -7,5 +7,5 @@ Gem::Specification.new do |s|
   s.homepage    = 'http://github.com/bpardee/persistent_http'
   s.files       = Dir["{examples,lib}/**/*"] + %w(LICENSE Rakefile History.md README.rdoc)
   s.version     = '1.0.3'
-  s.add_dependency 'gene_pool', '>= 1.2.1'
+  s.add_dependency 'gene_pool', '>= 1.2.2'
 end
