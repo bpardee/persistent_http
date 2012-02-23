@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem 'gene_pool', '>= 1.2.2'
+gem 'gene_pool', '>= 1.2.3'
 
 group :development do
   gem 'rack'

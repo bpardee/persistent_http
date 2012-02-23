@@ -233,6 +233,7 @@ class PersistentHTTP
                          :pool_size    => @pool_size,
                          :warn_timeout => @warn_timeout,
                          :idle_timeout => @idle_timeout,
+                         :close_proc   => nil,
                          :logger       => @logger) do
       begin
         connection = Net::HTTP.new(*net_http_args)
