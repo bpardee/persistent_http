@@ -1,5 +1,10 @@
 PersistentHttp Changelog
-=====================
+========================
+
+1.0.3
+
+ - Allow option idle_timeout which will renew connection that haven't been used in this amount of time.
+ - Implement shutdown which will close connections as they are checked in.
 
 1.0.2
 

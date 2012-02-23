@@ -83,6 +83,10 @@ class PersistentHTTP
   attr_reader :http_version
 
   ##
+  # Connection will be renewed if it hasn't been used in this amount of time.  Defaults to 10 seconds.
+  attr_reader :idle_timeout
+
+  ##
   # The value sent in the Keep-Alive header.  Defaults to 30.  Not needed for
   # HTTP/1.1 servers.
   #
@@ -143,7 +147,7 @@ class PersistentHTTP
   ##
   # The threshold in seconds for checking out a connection at which a warning 
   # will be logged via the logger
-  attr_accessor :warn_timeout
+  attr_reader :warn_timeout
 
   ##
   # Creates a new PersistentHTTP.
@@ -171,6 +175,7 @@ class PersistentHTTP
     @force_retry     = options[:force_retry]
     @headers         = options[:header]          || {}
     @host            = options[:host]
+    @idle_timeout    = options[:idle_timeout]    || 10
     @keep_alive      = options[:keep_alive]      || 30
     @logger          = options[:logger]
     @open_timeout    = options[:open_timeout]
@@ -227,6 +232,7 @@ class PersistentHTTP
     @pool = GenePool.new(:name         => name + '-' + connection_id,
                          :pool_size    => @pool_size,
                          :warn_timeout => @warn_timeout,
+                         :idle_timeout => @idle_timeout,
                          :logger       => @logger) do
       begin
         connection = Net::HTTP.new(*net_http_args)
@@ -244,6 +250,16 @@ class PersistentHTTP
         raise Error, "host down: #{connection.address}:#{connection.port}"
       end
     end
+  end
+
+  # Reset the size of the connection pool
+  def pool_size=(pool_size)
+    @gene_pool.pool_size = pool_size
+  end
+
+  # Return the size of the connection pool
+  def pool_size
+    @gene_pool.pool_size
   end
 
   ##
@@ -320,11 +336,8 @@ class PersistentHTTP
 
   ##
   # Shuts down all connections.
-
-  def shutdown
-    raise 'Shutdown not implemented'
-    # TBD - need to think about this one
-    @count_hash = nil
+  def shutdown(timeout=10)
+    @gene_pool.close(timeout)
   end
 
   #######

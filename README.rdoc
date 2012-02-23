@@ -55,4 +55,4 @@ returned.
 
 == Copyright
 
-Copyright (c) 2010 Eric Hodel, Aaron Patterson, Brad Pardee.  See LICENSE for details.
+Copyright (c) 2010-2012 Eric Hodel, Aaron Patterson, Brad Pardee.  See LICENSE for details.
