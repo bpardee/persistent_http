@@ -519,7 +519,7 @@ class PersistentHTTPTest < Test::Unit::TestCase
               rescue  Timeout::Error => e
                 # successfully failed to get a connection
               end
-              @http.remove(c1)
+              pool.remove(c1)
               Timeout.timeout(1) do
                 begin
                   pool.with_connection do |c4|
