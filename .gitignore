@@ -6,3 +6,7 @@
 Gemfile.lock
 .rvmrc
 *.gem
+.bundle
+.rbenv*
+bin
+vendor

@@ -605,7 +605,34 @@ class PersistentHTTPTest < Test::Unit::TestCase
       end
     end
   end
-#   
+
+  context 'with pool_timeout of 1' do
+    setup do
+      @pool_size = 2
+      @pool_timeout = 1
+      @http = PersistentHTTP.new(:url => 'http://example.com', :pool_size => @pool_size, :pool_timeout => @pool_timeout)
+    end
+
+    should 'raise a Timeout::Error when unable to acquire connection' do
+      2.times do
+        @pool_size.times do
+          Thread.new do
+            res = @http.request(get_request(CMD_SLEEP, @pool_timeout + 1))
+            assert res.kind_of?(Net::HTTPResponse)
+          end
+        end
+      end
+      sleep(0.1)
+      start_time = Time.now
+      assert_raises Timeout::Error do
+        res = @http.request(get_request(CMD_SUCCESS))
+        puts "No timeout after #{Time.now - start_time} seconds"
+      end
+      # Let the threads complete so we can do it again
+      sleep 2
+    end
+  end
+#
 #   # def test_shutdown
 #   #   c = connection
 #   #   cs = conns

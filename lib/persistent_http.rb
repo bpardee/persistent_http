@@ -106,6 +106,9 @@ class PersistentHTTP
   attr_reader :name
 
   ##
+  # Seconds to wait for an available connection before a Timeout::Error is raised
+  attr_accessor :pool_timeout
+  ##
   # Seconds to wait until a connection is opened.  See Net::HTTP#open_timeout
   attr_accessor :open_timeout
 
@@ -178,6 +181,7 @@ class PersistentHTTP
     @idle_timeout    = options[:idle_timeout]    || 10
     @keep_alive      = options[:keep_alive]      || 30
     @logger          = options[:logger]
+    @pool_timeout    = options[:pool_timeout]
     @open_timeout    = options[:open_timeout]
     @pool_size       = options[:pool_size]       || 1
     @port            = options[:port]
@@ -231,6 +235,7 @@ class PersistentHTTP
 
     @pool = GenePool.new(:name         => name + '-' + connection_id,
                          :pool_size    => @pool_size,
+                         :timeout      => @pool_timeout,
                          :warn_timeout => @warn_timeout,
                          :idle_timeout => @idle_timeout,
                          :close_proc   => nil,

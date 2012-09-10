@@ -1,6 +1,11 @@
 PersistentHttp Changelog
 ========================
 
+1.0.4
+
+ - Added option :pool_timeout which will raise a Timeout::Error if unable to checkout a connection
+   within this time.
+
 1.0.3
 
  - Allow option idle_timeout which will renew connection that haven't been used in this amount of time.

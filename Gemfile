@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem 'gene_pool', '>= 1.2.3'
+gemspec
 
 group :development do
   gem 'rack'
@@ -10,4 +10,5 @@ end
 
 group :test do
   gem 'shoulda'
+  gem 'jruby-openssl' if RUBY_PLATFORM[/java/]
 end
