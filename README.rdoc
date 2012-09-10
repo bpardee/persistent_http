@@ -34,6 +34,7 @@ returned.
       :name         => 'MyHTTPClient',
       :logger       => Rails.logger,
       :pool_size    => 10,
+      :pool_timeout => 5,
       :warn_timeout => 0.25,
       :force_retry  => true,
       :url          => 'https://www.example.com/echo/foo'  # equivalent to :use_ssl => true, :host => 'www.example.com', :default_path => '/echo/foo'
