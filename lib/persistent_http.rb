@@ -1,4 +1,5 @@
 require 'net/http'
+require 'net/https'
 require 'persistent_http/faster'
 require 'uri'
 require 'gene_pool'
@@ -241,6 +242,7 @@ class PersistentHTTP
                          :close_proc   => nil,
                          :logger       => @logger) do
       begin
+        @logger.debug { "#{name}: Creating connection" } if @logger
         connection = Net::HTTP.new(*net_http_args)
         connection.set_debug_output @debug_output if @debug_output
         connection.open_timeout = @open_timeout if @open_timeout
@@ -249,6 +251,7 @@ class PersistentHTTP
         ssl connection if @use_ssl
 
         connection.start
+        @logger.debug { "#{name} #{connection}: Connection created" } if @logger
         connection
       rescue Errno::ECONNREFUSED
         raise Error, "connection refused: #{connection.address}:#{connection.port}"
@@ -442,7 +445,6 @@ class PersistentHTTP
   # Enables SSL on +connection+
 
   def ssl connection
-    require 'net/https'
     connection.use_ssl = true
 
     # suppress warning but allow override

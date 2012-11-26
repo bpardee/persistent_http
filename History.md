@@ -1,6 +1,11 @@
 PersistentHttp Changelog
 ========================
 
+1.0.5
+
+ - Don't require 'net/https' in code.  JRuby 1.6.8 can have issues when 2 threads attempt to require it
+   at the same time.
+
 1.0.4
 
  - Added option :pool_timeout which will raise a Timeout::Error if unable to checkout a connection
