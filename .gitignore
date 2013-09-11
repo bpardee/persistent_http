@@ -7,6 +7,6 @@ Gemfile.lock
 .rvmrc
 *.gem
 .bundle
-.rbenv*
+.ruby-version
 bin
 vendor

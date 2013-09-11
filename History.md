@@ -1,6 +1,10 @@
 PersistentHttp Changelog
 ========================
 
+1.0.6
+
+ - Fix pool_size and shutdown methods and make tests pass again (Matt Campbell - soupmatt)
+
 1.0.5
 
  - Don't require 'net/https' in code.  JRuby 1.6.8 can have issues when 2 threads attempt to require it

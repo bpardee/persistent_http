@@ -6,6 +6,6 @@ Gem::Specification.new do |s|
   s.email       = ['bradpardee@gmail.com']
   s.homepage    = 'http://github.com/bpardee/persistent_http'
   s.files       = Dir["{examples,lib}/**/*"] + %w(LICENSE Rakefile History.md README.rdoc)
-  s.version     = '1.0.5'
+  s.version     = '1.0.6'
   s.add_dependency 'gene_pool', '>= 1.3'
 end
