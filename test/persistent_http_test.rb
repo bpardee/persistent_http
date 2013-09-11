@@ -118,6 +118,22 @@ class PersistentHTTPTest < Test::Unit::TestCase
       @http.headers['user-agent'] = 'test ua'
     end
 
+    should 'return the default pool_size' do
+      assert_equal 1, @http.pool_size
+      assert_equal 1, @http.pool.pool_size
+    end
+
+    should 'allow you to change the pool_size' do
+      @http.pool_size = 4
+      assert_equal 4, @http.pool_size
+      assert_equal 4, @http.pool.pool_size
+    end
+
+    should 'allow you to shutdown the pool' do
+      @http.shutdown
+      assert_equal 0, @http.pool.size
+    end
+
     should 'have options set' do
       assert_equal @http.proxy_uri, nil
       assert_equal 'TestNetHTTPPersistent', @http.name
@@ -356,6 +372,10 @@ class PersistentHTTPTest < Test::Unit::TestCase
       @http = PersistentHTTP.new(:host => 'foobar', :proxy => :ENV)
     end
 
+    teardown do
+      clear_proxy_env
+    end
+
     should 'match HTTP_PROXY' do
       assert_equal URI.parse('http://proxy.example'), @http.proxy_uri
       assert_equal 'foobar', @http.host
@@ -392,6 +412,10 @@ class PersistentHTTPTest < Test::Unit::TestCase
       @http                  = PersistentHTTP.new(:url => 'https://zulu.com/foobar', :proxy => :ENV)
     end
 
+    teardown do
+      clear_proxy_env
+    end
+
     should 'create proxy_uri from env' do
       expected          = URI.parse 'http://proxy.example'
       expected.user     = 'johndoe'
@@ -408,6 +432,10 @@ class PersistentHTTPTest < Test::Unit::TestCase
       ENV['http_proxy_user'] = 'johndoe'
       ENV['http_proxy_pass'] = 'muffins'
       @http                  = PersistentHTTP.new(:url => 'https://zulu.com/foobar', :proxy => :ENV)
+    end
+
+    teardown do
+      clear_proxy_env
     end
 
     should 'create proxy_uri from env' do
@@ -499,6 +527,10 @@ class PersistentHTTPTest < Test::Unit::TestCase
   context 'with pool size of 3' do
     setup do
       @http = PersistentHTTP.new(:url => 'http://example.com', :pool_size => 3)
+    end
+
+    should 'return the correct pool size' do
+      assert_equal 3, @http.pool_size
     end
     
     should 'only allow 3 connections checked out at a time' do
@@ -611,6 +643,10 @@ class PersistentHTTPTest < Test::Unit::TestCase
       @pool_size = 2
       @pool_timeout = 1
       @http = PersistentHTTP.new(:url => 'http://example.com', :pool_size => @pool_size, :pool_timeout => @pool_timeout)
+    end
+
+    should 'return the correct pool size' do
+      assert_equal @pool_size, @http.pool_size
     end
 
     should 'raise a Timeout::Error when unable to acquire connection' do

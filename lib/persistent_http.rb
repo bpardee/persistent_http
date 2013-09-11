@@ -263,12 +263,12 @@ class PersistentHTTP
 
   # Reset the size of the connection pool
   def pool_size=(pool_size)
-    @gene_pool.pool_size = pool_size
+    @pool.pool_size = pool_size
   end
 
   # Return the size of the connection pool
   def pool_size
-    @gene_pool.pool_size
+    @pool.pool_size
   end
 
   ##
@@ -346,7 +346,7 @@ class PersistentHTTP
   ##
   # Shuts down all connections.
   def shutdown(timeout=10)
-    @gene_pool.close(timeout)
+    @pool.close(timeout)
   end
 
   #######
