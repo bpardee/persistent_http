@@ -2,6 +2,11 @@ source "http://rubygems.org"
 
 gemspec
 
+platforms :rbx do
+  gem 'rubysl', '~> 2.0'
+  gem 'rubysl-test-unit'
+end
+
 group :development do
   gem 'rack'
   gem 'rake'
@@ -10,5 +15,5 @@ end
 
 group :test do
   gem 'shoulda'
-  gem 'jruby-openssl' if RUBY_PLATFORM[/java/]
+  gem 'jruby-openssl', :platforms => [:jruby]
 end
