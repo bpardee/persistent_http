@@ -15,5 +15,4 @@ end
 
 group :test do
   gem 'shoulda'
-  gem 'jruby-openssl', :platforms => [:jruby]
 end
