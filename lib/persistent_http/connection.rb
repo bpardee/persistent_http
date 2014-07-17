@@ -153,6 +153,8 @@ class PersistentHTTP
       @use_ssl         = options[:use_ssl]
       @verify_callback = options[:verify_callback]
       @verify_mode     = options[:verify_mode]
+      # Because maybe we want a non-persistent connection and are just using this for the proxy stuff
+      @non_persistent  = options[:non_persistent]
 
       url              = options[:url]
       if url
@@ -205,9 +207,9 @@ class PersistentHTTP
       @connection.start
       @logger.debug { "#{@name} #{@connection}: Connection created" } if @logger
     rescue Errno::ECONNREFUSED
-      raise Error, "connection refused: #{connection.address}:#{connection.port}"
+      raise Error, "connection refused: #{@connection.address}:#{@connection.port}"
     rescue Errno::EHOSTDOWN
-      raise Error, "host down: #{connection.address}:#{connection.port}"
+      raise Error, "host down: #{@connection.address}:#{@connection.port}"
     end
 
     ##
@@ -232,8 +234,10 @@ class PersistentHTTP
         req.add_field(*pair)
       end
 
-      req.add_field 'Connection', 'keep-alive'
-      req.add_field 'Keep-Alive', @keep_alive
+      unless @non_persistent
+        req.add_field 'Connection', 'keep-alive'
+        req.add_field 'Keep-Alive', @keep_alive
+      end
 
       begin
         options.each do |key, value|
