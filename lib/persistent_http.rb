@@ -68,6 +68,18 @@ class PersistentHTTP
   attr_reader :warn_timeout
 
   ##
+  # Host for the Net:HTTP connection
+  attr_reader :host
+
+  ##
+  # Port for the Net:HTTP connection
+  attr_reader :port
+
+  ##
+  # Default path for the request
+  attr_accessor :default_path
+
+  ##
   # Creates a new PersistentHTTP.
   #
   # Set +name+ to keep your connections apart from everybody else's.  Not
@@ -91,6 +103,16 @@ class PersistentHTTP
     @pool_timeout    = options[:pool_timeout]
     @pool_size       = options[:pool_size]       || 1
     @warn_timeout    = options[:warn_timeout]    || 0.5
+    @default_path    = options[:default_path]
+    @host            = options[:host]
+    @port            = options[:port]
+    url              = options[:url]
+    if url
+      url = URI.parse(url) if url.kind_of? String
+      @default_path ||= url.request_uri
+      @host         ||= url.host
+      @port         ||= url.port
+    end
 
     @pool = GenePool.new(:name         => name,
                          :pool_size    => @pool_size,

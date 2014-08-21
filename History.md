@@ -1,6 +1,15 @@
 PersistentHttp Changelog
 ========================
 
+2.0.1
+
+ - Put default_path, host and port getters back into persistent_http for backwards compatibility
+
+2.0.0
+
+ - Separate out connection so a single dedicated connection can be used.
+ - Allow non-persistent connections in case we just want the proxying stuff.
+
 1.0.6
 
  - Fix pool_size and shutdown methods and make tests pass again (Matt Campbell - soupmatt)
@@ -33,4 +42,3 @@ PersistentHttp Changelog
 1.0.0
 
  - Initial release
-
