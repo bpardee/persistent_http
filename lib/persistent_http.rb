@@ -80,6 +80,10 @@ class PersistentHTTP
   attr_accessor :default_path
 
   ##
+  # Expose underlying GenePool object
+  attr_reader :pool
+
+  ##
   # Creates a new PersistentHTTP.
   #
   # Set +name+ to keep your connections apart from everybody else's.  Not
@@ -137,8 +141,13 @@ class PersistentHTTP
   end
 
   # Return size of current used connections
-  def used_connection_count
+  def used_connections
     @pool.size
+  end
+
+  # Return the size of available connections
+  def available_connections
+    pool_size - used_connections
   end
 
   ##
