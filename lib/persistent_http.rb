@@ -136,6 +136,11 @@ class PersistentHTTP
     @pool.pool_size
   end
 
+  # Return size of current used connections
+  def used_connection_count
+    @pool.size
+  end
+
   ##
   # Makes a request per +req+.  If +req+ is nil a Net::HTTP::Get is performed
   # against +default_path+.
