@@ -84,6 +84,10 @@ class PersistentHTTP
   attr_reader :pool
 
   ##
+  # The throttle setting (Default: false)
+  attr_accessor :throttle
+
+  ##
   # Creates a new PersistentHTTP.
   #
   # Set +name+ to keep your connections apart from everybody else's.  Not
@@ -106,6 +110,7 @@ class PersistentHTTP
     @logger          = options[:logger]
     @pool_timeout    = options[:pool_timeout]
     @pool_size       = options[:pool_size]       || 1
+    @throttle        = options[:throttle]        || false
     @warn_timeout    = options[:warn_timeout]    || 0.5
     @default_path    = options[:default_path]
     @host            = options[:host]
@@ -120,6 +125,7 @@ class PersistentHTTP
 
     @pool = GenePool.new(:name         => name,
                          :pool_size    => @pool_size,
+                         :throttle     => @throttle,
                          :timeout      => @pool_timeout,
                          :warn_timeout => @warn_timeout,
                          :idle_timeout => @idle_timeout,
@@ -140,14 +146,19 @@ class PersistentHTTP
     @pool.pool_size
   end
 
-  # Return size of current used connections
-  def used_connections
+  # Return size of currently established connections
+  def established_pool_connections
     @pool.size
   end
 
-  # Return the size of available connections
-  def available_connections
-    pool_size - used_connections
+  # Return size of establish but currently not used connections
+  def available_pool_connections
+    established_pool_connections - @pool.checked_out
+  end
+
+  # Return the size of available pool space
+  def available_pool_space
+    pool_size - established_pool_connections
   end
 
   ##
