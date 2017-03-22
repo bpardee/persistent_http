@@ -29,6 +29,18 @@ class PersistentHTTP
   class Connection
 
     ##
+    # Exceptions rescued for automatic retry on ruby 2.0.0.  This overlaps with
+    # the exception list for ruby 1.x.
+    RETRIED_EXCEPTIONS = [ # :nodoc:
+      IOError,
+      EOFError,
+      Errno::ECONNRESET,
+      Errno::ECONNABORTED,
+      Errno::EPIPE,
+      (OpenSSL::SSL::SSLError if defined? OpenSSL::SSL),
+    ].compact
+
+    ##
     # An SSL certificate authority.  Setting this will set verify_mode to
     # VERIFY_PEER.
     attr_accessor :ca_file
@@ -119,6 +131,10 @@ class PersistentHTTP
     attr_accessor :verify_mode
 
     ##
+    # Proc to execute after connect which will get passed the Net::HTTP connection
+    attr_accessor :after_connect
+
+    ##
     # Creates a new HTTP Connection.
     #
     # Set +name+ to keep your connections apart from everybody else's.  Not
@@ -153,6 +169,7 @@ class PersistentHTTP
       @use_ssl         = options[:use_ssl]
       @verify_callback = options[:verify_callback]
       @verify_mode     = options[:verify_mode]
+      @after_connect   = options[:after_connect]
       # Because maybe we want a non-persistent connection and are just using this for the proxy stuff
       @non_persistent  = options[:non_persistent]
 
@@ -206,6 +223,7 @@ class PersistentHTTP
 
       @connection.start
       @logger.debug { "#{@name} #{@connection}: Connection created" } if @logger
+      @after_connect.call(@connection) if @after_connect
     rescue Errno::ECONNREFUSED
       raise Error, "connection refused: #{@connection.address}:#{@connection.port}"
     rescue Errno::EHOSTDOWN
@@ -266,7 +284,7 @@ class PersistentHTTP
           retry
         end
 
-      rescue IOError, EOFError, Errno::ECONNABORTED, Errno::ECONNREFUSED, Errno::ECONNRESET, Errno::EPIPE => e
+      rescue *RETRIED_EXCEPTIONS => e
         due_to = "(due to #{e.message} - #{e.class})"
         if retried or not (idempotent? req or @force_retry)
           @logger.info "#{@name}: Removing connection #{due_to} #{error_message}" if @logger

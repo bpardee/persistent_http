@@ -1,6 +1,11 @@
 PersistentHttp Changelog
 ========================
 
+2.0.2
+
+ - Add OpenSSL::SSL::SSLError to retriable exceptions if it's defined.
+ - Add after_connect option for manipulating connection after connect.
+
 2.0.1
 
  - Put default_path, host and port getters back into persistent_http for backwards compatibility

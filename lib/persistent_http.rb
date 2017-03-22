@@ -84,7 +84,7 @@ class PersistentHTTP
   #
   # Set +name+ to keep your connections apart from everybody else's.  Not
   # required currently, but highly recommended.  Your library name should be
-  # good enough.  This parameter will be required in a future version.
+  # good enough.
   #
   # +proxy+ may be set to a URI::HTTP or :ENV to pick up proxy options from
   # the environment.  See proxy_from_env for details.
