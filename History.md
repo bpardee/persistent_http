@@ -1,6 +1,10 @@
 PersistentHttp Changelog
 ========================
 
+2.0.3
+
+ - Set keep_alive_timeout based on keep_alive option, added in ruby 2.0
+
 2.0.2
 
  - Add OpenSSL::SSL::SSLError to retriable exceptions if it's defined.

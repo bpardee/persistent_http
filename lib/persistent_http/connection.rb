@@ -218,6 +218,7 @@ class PersistentHTTP
       @connection.set_debug_output @debug_output if @debug_output
       @connection.open_timeout = @open_timeout if @open_timeout
       @connection.read_timeout = @read_timeout if @read_timeout
+      @connection.keep_alive_timeout = @keep_alive if @keep_alive
 
       ssl if @use_ssl
 
